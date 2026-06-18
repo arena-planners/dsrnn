@@ -1,0 +1,4 @@
+files:
+  - repo: arena-rosnav/dsrnn
+    filename: 55554.pt
+    dest: model/55554.pt
