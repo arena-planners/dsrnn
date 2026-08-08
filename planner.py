@@ -12,13 +12,13 @@ consumes raw observations.
 
 from __future__ import annotations
 
-import importlib.util
 import pathlib
 
 import numpy as np
 import torch
 from arena_planners.sdk import load_manifest, main_loop
 
+from dsrnn_config import Config
 from srnn_net import Policy
 
 _HERE = pathlib.Path(__file__).parent
@@ -33,16 +33,9 @@ _RADIUS: float = 0.3                # config.robot.radius
 _V_PREF: float = 1.0                # config.robot.v_pref
 
 
-def _load_config():
-    spec = importlib.util.spec_from_file_location("dsrnn_config", _MODEL_DIR / "config.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod.Config()
-
-
 class _Runner:
     def __init__(self) -> None:
-        self.config = _load_config()
+        self.config = Config()
         self.human_num = int(self.config.sim.human_num)
 
         self.policy = Policy(obs_shape=None, action_dim=2, base_kwargs=self.config)
