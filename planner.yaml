@@ -1,7 +1,8 @@
 action_type: differential_drive
 sensor_needs: []
 obs_policy: latest_only
-controls_orientation: true
+rate_hz: 4
+controls_orientation: false
 
 depends:
   global_plan: true

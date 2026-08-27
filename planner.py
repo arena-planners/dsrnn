@@ -28,7 +28,7 @@ _CHECKPOINT = _MODEL_DIR / "55554.pt"
 # Unicycle action limits / dynamics from the upstream unicycle config + clip_action.
 _DELTA_V_CLIP: float = 0.1          # crowd_nav/policy/srnn.py: |raw[0]| <= 0.1 (change of v)
 _DELTA_THETA_CLIP: float = 0.1      # crowd_nav/policy/srnn.py: |raw[1]| <= 0.1 (change of theta)
-_TIME_STEP: float = 0.1             # config.env.time_step
+_TIME_STEP: float = 0.25            # config.env.time_step
 _RADIUS: float = 0.3                # config.robot.radius
 _V_PREF: float = 1.0                # config.robot.v_pref
 
@@ -99,7 +99,9 @@ def step(features: dict) -> list[float]:
     if robot_pose is None or goal_pose is None:
         return [0.0, 0.0]
 
-    px, py, theta = float(robot_pose[0]), float(robot_pose[1]), float(robot_pose[2])
+    px, py = float(robot_pose[0]), float(robot_pose[1])
+    # crowd_sim wraps theta to [0, 2pi) (agent.step), tf yaw is (-pi, pi].
+    theta = float(robot_pose[2]) % (2.0 * np.pi)
     if robot_state is not None and len(robot_state) >= 4:
         vx, vy = float(robot_state[2]), float(robot_state[3])
     else:
