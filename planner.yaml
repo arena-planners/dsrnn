@@ -46,3 +46,4 @@ observations:
       type: SubgoalGenerator
       params:
         lookahead: 2.0
+        require_plan: true
