@@ -108,8 +108,8 @@ def step(features: dict) -> list[float]:
         vx, vy = 0.0, 0.0
     gx, gy = float(goal_pose[0]), float(goal_pose[1])
 
-    # robot_node: px, py, radius, gx, gy, v_pref, theta  (get_full_state_list_noV)
-    robot_node = [px, py, _RADIUS, gx, gy, _V_PREF, theta]
+    # robot_node: px, py, radius, gx, gy, v_pref, theta  (get_full_state_list_noV), robot-centred
+    robot_node = [0.0, 0.0, _RADIUS, gx - px, gy - py, _V_PREF, theta]
     # temporal_edges: world-frame robot velocity (upstream robot.vx/vy =
     # v*cos/sin(theta)). The odom twist is body-frame, so rotate body->world.
     temporal_edges = [vx * np.cos(theta) - vy * np.sin(theta),
@@ -125,9 +125,9 @@ def step(features: dict) -> list[float]:
             rel.append((d2, hx - px, hy - py))
     rel.sort(key=lambda r: r[0])  # nearest first if more than human_num present
     spatial_edges = np.zeros((runner.human_num, 2), dtype=np.float32)
-    # absent humans: upstream initializes last_human_states far away (15,15); use a large
-    # relative offset so they fall outside FOV/attention influence.
-    spatial_edges[:] = (15.0 - px, 15.0 - py)
+    # absent humans: upstream initializes last_human_states far away (15,15); keep that
+    # offset robot-relative so they fall outside FOV/attention influence.
+    spatial_edges[:] = (15.0, 15.0)
     for i in range(min(runner.human_num, len(rel))):
         spatial_edges[i] = (rel[i][1], rel[i][2])
 
