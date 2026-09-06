@@ -1,6 +1,5 @@
 action_type: differential_drive
 sensor_needs: []
-obs_policy: latest_only
 rate_hz: 4
 controls_orientation: false
 
