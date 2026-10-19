@@ -2,3 +2,4 @@ files:
   - repo: arena-rosnav/dsrnn
     filename: 55554.pt
     dest: model/55554.pt
+    sha256: e8b5ee59e289ebe87d98314ff701fe3893882b7e133a64ba5b68d1631a49120f
